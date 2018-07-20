@@ -5,7 +5,7 @@ The h2c protocol is the non-TLS secured version of HTTP/2 which is not available
 
 Code is a copy of Traefik's h2c server, but adapted for standalone usage as an http.Handler.
 
-Traefik can be found here: github.com/containous/traefik
+Traefik can be found here: https://github.com/containous/traefik
 
 #
 
@@ -28,17 +28,21 @@ import (
 
 func main() {
 
+	// Router/Mux (can use any http.Handler)
 	router := http.NewServeMux()
 
+	// Handlers...
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Hello World")
 	})
 
+	// Wrap the Router
 	h2cWrapper := &h2c.HandlerH2C{
 		Handler:  router,
 		H2Server: &http2.Server{},
 	}
 
+	// Server
 	srv := http.Server{
 		Addr:    ":8080",
 		Handler: h2cWrapper,
